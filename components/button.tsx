@@ -7,7 +7,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         outline:
-          "border border-indigo-600 text-white text-indigo-600 hover:bg-indigo-600/20",
+          "border border-indigo-600 text-indigo-600 hover:bg-indigo-600/20",
+        outlineSecondary: "border border-white text-white hover:bg-white/20",
       },
     },
     defaultVariants: {
