@@ -2,10 +2,12 @@
 
 import Button from "./button";
 import { Spiral as Hamburger } from "hamburger-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { CSSTransition } from "react-transition-group";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const nodeRef = useRef(null);
 
   return (
     <>
@@ -28,35 +30,51 @@ const Navbar = () => {
           <Button>Resume</Button>
         </div>
 
-        <div className="block md:hidden z-10">
+        <div className="block md:hidden z-30">
           <Hamburger toggled={isMenuOpen} toggle={setIsMenuOpen} size={32} />
         </div>
       </nav>
+
       {isMenuOpen && (
-        <div className="md:hidden fixed backdrop-blur-sm inset-0">
-          <div className="fixed bg-indigo-600 w-3/4 right-0 inset-y-0 flex items-center justify-center">
-            <div className="flex flex-col space-y-12">
-              {["about", "experience", "projects", "contact"].map(
-                (link, idx) => (
-                  <a
-                    className="hover:scale-110 transition-all"
-                    href={`#${link}`}
-                    key={link}
-                  >
-                    <div className="flex gap-2">
-                      <p className="text-xl">{`0${idx + 1}.`}</p>
-                      <p className="text-xl">{`${link}`}</p>
-                    </div>
-                  </a>
-                )
-              )}
-              <Button variant="outlineSecondary" className="w-full">
-                Resume
-              </Button>
-            </div>
+        <div className="md:hidden fixed z-10 backdrop-blur-sm inset-0" />
+      )}
+
+      <CSSTransition
+        nodeRef={nodeRef}
+        in={isMenuOpen}
+        timeout={300}
+        unmountOnExit
+        classNames={{
+          enter: "transform transition-all duration-300",
+          enterActive: "-translate-x-full",
+          enterDone: "-translate-x-full",
+          exit: "transform transition-all duration-300",
+          exitActive: "translate-x-0",
+        }}
+      >
+        <div
+          ref={nodeRef}
+          className="absolute bg-indigo-600 w-3/4 z-20 left-full inset-y-0 flex items-center justify-center"
+        >
+          <div className="flex flex-col space-y-12">
+            {["about", "experience", "projects", "contact"].map((link, idx) => (
+              <a
+                className="hover:scale-110 transition-all"
+                href={`#${link}`}
+                key={link}
+              >
+                <div className="flex gap-2">
+                  <p className="text-xl">{`0${idx + 1}.`}</p>
+                  <p className="text-xl">{`${link}`}</p>
+                </div>
+              </a>
+            ))}
+            <Button variant="outlineSecondary" className="w-full">
+              Resume
+            </Button>
           </div>
         </div>
-      )}
+      </CSSTransition>
     </>
   );
 };
